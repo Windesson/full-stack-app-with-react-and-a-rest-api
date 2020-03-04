@@ -44,9 +44,9 @@ export default class CoursesDetail extends Component {
     HandleDelete = () => {
         const { context } = this.props;
         const { id, title } = this.state.course;
-        const {username, password} = context.authenticatedUser;
+        const {encodedCredentials} = context.authenticatedUser;
 
-        context.data.deleteCourse(id, username, password)
+        context.data.deleteCourse(id, encodedCredentials)
         .then( errors => {
           if (errors === null) {
             this.props.history.push('/');

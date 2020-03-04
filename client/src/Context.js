@@ -12,8 +12,7 @@ export class Provider extends Component {
     }
 
     state = {
-      //authenticatedUser: Cookies.getJSON('authenticatedUser') || null
-      authenticatedUser : null
+      authenticatedUser: Cookies.getJSON('authenticatedUser') || null
     };
 
     render() {
@@ -36,15 +35,16 @@ export class Provider extends Component {
     }
 
     signIn = async (username, password) => {
-      const user = await this.data.getUser(username, password);
+      const encodedCredentials = btoa(`${username}:${password}`);
+      const user = await this.data.getUser(encodedCredentials);
       if (user !== null) {
         this.setState(() => {
           return {
-            authenticatedUser: {...user, username, password},
+            authenticatedUser: {...user, encodedCredentials}
           };
         });
         // Set cookie
-        //Cookies.set('authenticatedUser', JSON.stringify(user), { expires: 1 });
+        Cookies.set('authenticatedUser', JSON.stringify(this.state.authenticatedUser), { expires: 1 });
       }
       return user;
     }
@@ -55,7 +55,7 @@ export class Provider extends Component {
           authenticatedUser: null,
         };
       });
-      //Cookies.remove('authenticatedUser');
+      Cookies.remove('authenticatedUser');
     }  
 }  
 
