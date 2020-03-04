@@ -12,7 +12,8 @@ export class Provider extends Component {
     }
 
     state = {
-      authenticatedUser: Cookies.getJSON('authenticatedUser') || null
+      //authenticatedUser: Cookies.getJSON('authenticatedUser') || null
+      authenticatedUser : null
     };
 
     render() {
@@ -39,11 +40,11 @@ export class Provider extends Component {
       if (user !== null) {
         this.setState(() => {
           return {
-            authenticatedUser: user,
+            authenticatedUser: {...user, username, password},
           };
         });
         // Set cookie
-        Cookies.set('authenticatedUser', JSON.stringify(user), { expires: 1 });
+        //Cookies.set('authenticatedUser', JSON.stringify(user), { expires: 1 });
       }
       return user;
     }
@@ -54,7 +55,7 @@ export class Provider extends Component {
           authenticatedUser: null,
         };
       });
-      Cookies.remove('authenticatedUser');
+      //Cookies.remove('authenticatedUser');
     }  
 }  
 
