@@ -15,6 +15,7 @@ import UserSignOut from './components/UserSignOut';
 import CourseDetail from './components/CourseDetail';
 import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
+import Error from './components/Error'
 import withContext from './Context';
 
 const HeaderWithContext = withContext(Header);
@@ -34,12 +35,13 @@ export default () => (
       <hr/>
       <Switch>
         <Route exact path="/" component={CoursesWithContext} />
-        <PrivateRoute exact path="/courses/:id" component={CourseDetailWithContext} />
         <PrivateRoute exact path="/courses/create" component={CreateCourseWithContext} />
         <PrivateRoute exact path="/courses/:id/update" component={UpdateCourseWithContext} />
+        <Route exact path="/courses/:id" component={CourseDetailWithContext} />
         <Route exact path="/signin" component={UserSignInWithContext} />
         <Route exact path="/signup" component={UserSignUpWithContext} />
         <Route exact path="/signout" component={UserSignOutWithContext} />
+        <Route exact path="/error" component={Error} />
         <Route component={NotFound} />
       </Switch>
     </div>
