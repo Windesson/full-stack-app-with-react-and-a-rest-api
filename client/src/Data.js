@@ -96,14 +96,14 @@ export default class Data {
       }
     }
 
-    async createCourse(encodedCredentials) {
-      const response = await this.api(`/courses`,'POST', null, encodedCredentials);
+    async createCourse(course, encodedCredentials) {
+      const response = await this.api(`/courses`,'POST', course, encodedCredentials);
       if (response.status === 201) {
-        return response.location;
+        return { status:response.status, data: response.location };
       }
       else if (response.status === 400) {
-        return response.json().then(data => {
-          return data.errors;
+        return response.json().then(result => {
+          return { status: response.status, errors: result.errors};
         });
       }
       else {

@@ -47,7 +47,7 @@ export class Provider extends Component {
         Cookies.set('authenticatedUser', JSON.stringify(this.state.authenticatedUser), { expires: 1 });
       }
       return user;
-    }
+    }    
   
     signOut = () => {
       this.setState(() => {

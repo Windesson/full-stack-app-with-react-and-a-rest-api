@@ -30,7 +30,6 @@ router.get('/', authenticateUser, (req, res) => {
 // Route that creates a new user.
 router.post('/', checkUserValidationChain, async (req, res) => {
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map(error => error.msg);
     return res.status(400).json({ errors: errorMessages });

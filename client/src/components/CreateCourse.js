@@ -54,29 +54,36 @@ export default class CreateCourse extends Component {
   }
 
   submit = () => {
-    // const { context } = this.props;
-    // const { username, password } = this.state;
-    // const { from } = this.props.location.state || { from: { pathname: '/authenticated' } };
+    const { context } = this.props;
+    const { encodedCredentials , id } = context.authenticatedUser;
+    const course = {        
+        title: this.state.title,
+        description : this.state.description,
+        estimatedTime : this.state.estimatedTime,
+        materialsNeeded : this.state.materialsNeeded,
+        userId : id
+    }
 
-    // context.actions.signIn(username, password)
-    // .then( user => {
-    //   if (user === null) {
-    //     this.setState(() => {
-    //       return { errors: [ 'Sign-in was unsuccessful' ] };
-    //     });
-    //   } else {
-    //     this.props.history.push(from);
-    //     console.log(`SUCCESS! ${username} is now signed in!`);
-    //  }
-    // })
-    // .catch( err => {
-    //   console.log(err);
-    //   this.props.history.push('/error');
-    // })  
+    context.data.createCourse(course,encodedCredentials)
+    .then( result => {
+      if (result.status === 201 ) {
+        console.log(result)
+        this.props.history.push(`/`);
+      } else {
+        this.setState(() => {
+            return { errors: result.errors };
+       });
+     }
+    })
+    .catch( err => {
+      console.log(err);
+      this.props.history.push('/error');
+    })  
      
   }
 
   cancel = () => {
     this.props.history.push('/');
   }
+
 }

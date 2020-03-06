@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 export default class CoursesDetail extends Component {
     
@@ -102,17 +103,15 @@ const CourseDetailContainer = ({course, HandleDelete, errors}) => {
                 <div className="course--stats">
                     <ul className="course--stats--list">
                         <li className="course--stats--list--item">
-                            <h4>Estimated Time</h4>
-                            <h3>{course.estimatedTime}</h3>
+                            <h4>Estimated Time</h4>                            
+                            <h3><ReactMarkdown source={course.estimatedTime} /></h3>
                         </li>
                         <li className="course--stats--list--item">
                             <h4>Materials Needed</h4>
                             <ul>
                              { (course.materialsNeeded) ?
-                                (course.materialsNeeded.split("*").map((material, i) => {
-                                    if(material.trim() !== '') return <li key={i}>{material}</li>
-                                  }))
-                                : ''
+                                (course.materialsNeeded.split("*").filter(filterMarkDown).map((material, i) => <li key={i}><ReactMarkdown source={material} /></li>))
+                                :''
                              }
                              </ul>
                         </li>
@@ -125,6 +124,10 @@ const CourseDetailContainer = ({course, HandleDelete, errors}) => {
     } else {
         return (<h3>Course Not Found</h3>);
     }
+}
+
+function filterMarkDown(material) {
+    return (material.trim() !== '')
 }
 
 function ErrorsDisplay({ errors }) {
