@@ -4,7 +4,10 @@ import CourseForm from './CourseForm';
 
 export default class UpdateCourse extends Component {
   state = {
-    course : null,
+    title: '',
+    description: '',
+    estimatedTime: '',
+    materialsNeeded: '',
     loading: true,
     errors: [],
   }
@@ -18,7 +21,7 @@ export default class UpdateCourse extends Component {
         this.setState( { loading: true }) 
         context.data.getCourse(this.props.match.params.id)
         .then( course  => {
-        this.setState( { course }) 
+        this.setState( { ...course }) 
         })
         .catch( () => {
         this.props.history.push('/NotFound')
@@ -34,12 +37,10 @@ export default class UpdateCourse extends Component {
         return (<div>Loading...</div>);
     };
 
-    const {
-      title,
-      description,
-      estimatedTime,
-      materialsNeeded,
-    } = this.state.course;
+    const title = this.state.title || '';
+    const description = this.state.description || '';
+    const estimatedTime = this.state.estimatedTime || '';
+    const materialsNeeded = this.state.materialsNeeded || '';
 
     const {
         errors
@@ -79,29 +80,34 @@ export default class UpdateCourse extends Component {
   }
 
   submit = () => {
-    // const { context } = this.props;
-    // const { username, password } = this.state;
-    // const { from } = this.props.location.state || { from: { pathname: '/authenticated' } };
+    const { context } = this.props;
+    const { encodedCredentials } = context.authenticatedUser;
+    const course = {        
+        id : this.state.id,
+        title: this.state.title,
+        description : this.state.description,
+        estimatedTime : this.state.estimatedTime,
+        materialsNeeded : this.state.materialsNeeded
+    }
 
-    // context.actions.signIn(username, password)
-    // .then( user => {
-    //   if (user === null) {
-    //     this.setState(() => {
-    //       return { errors: [ 'Sign-in was unsuccessful' ] };
-    //     });
-    //   } else {
-    //     this.props.history.push(from);
-    //     console.log(`SUCCESS! ${username} is now signed in!`);
-    //  }
-    // })
-    // .catch( err => {
-    //   console.log(err);
-    //   this.props.history.push('/error');
-    // })  
+    context.data.updateCourse(course,encodedCredentials)
+    .then( result => {
+      if (result.status === 204 ) {
+        this.props.history.push(`/courses/${course.id}`);
+      } else {
+        this.setState(() => {
+            return { errors: result.errors };
+       });
+     }
+    })
+    .catch( err => {
+      console.log(err);
+      this.props.history.push('/error');
+    })  
      
   }
 
   cancel = () => {
-    this.props.history.push('/');
+    this.props.history.push(`/courses/${this.state.id}`);
   }
 }

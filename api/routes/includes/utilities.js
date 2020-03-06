@@ -103,14 +103,13 @@ const hashPassword = (password) => {
   
 
 const filteredUserAttributes = {
-    attributes : ["id","title","description", "userId"],
+    attributes : ["id","title","description", "estimatedTime", "materialsNeeded",  "userId"],
     include: [  
       { 
         model: User,  attributes: ["id","firstName","lastName", "emailAddress"]
       }
     ] 
 };
-
 
 
 module.exports = { 

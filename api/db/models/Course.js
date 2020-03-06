@@ -19,10 +19,14 @@ module.exports = (sequelize) => {
           notEmpty: {
             msg: '"Text" is required'
           }
-        },
-    estimatedTime: Sequelize.STRING,
-    materialsNeeded: Sequelize.STRING    
+        }, 
     },
+    estimatedTime: {
+      type: Sequelize.STRING
+    },
+    materialsNeeded:  {
+      type: Sequelize.STRING
+    },   
   }, { sequelize });
 
   Course.associate = (models) => {

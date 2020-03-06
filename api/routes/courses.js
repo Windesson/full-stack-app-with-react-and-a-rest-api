@@ -10,7 +10,7 @@ const {
   authenticateUser,
   handleErrorMessage,
   filteredUserAttributes,
-  checkCourseValidationChain,
+  checkCourseValidationChain
 } = require("./includes/utilities");
 
 
@@ -69,10 +69,10 @@ router.put("/:id", [authenticateUser, checkCourseValidationChain],async (req, re
   }
 
   try {
-    let course = await Course.findByPk(req.params.id);
+    let course = await Course.findByPk(req.params.id,filteredUserAttributes);
     if(course){
       const user = req.currentUser;
-      if(user.id !== course.userId) return res.status(403).json({ errors: "User doesn't own the requested course" });
+      if(user.id !== course.userId) return res.status(403).json({ errors: ["User doesn't own the requested course"] });
       await course.update(req.body);
       return res.status(204).end();
     } else {
@@ -91,7 +91,7 @@ router.delete("/:id", authenticateUser, async (req, res, next) => {
       const course = await Course.findByPk(req.params.id);
       if(course){      
         const user = req.currentUser;
-        if(user.id !== course.userId) return res.status(403).json({ errors: "User doesn't own the requested course" });
+        if(user.id !== course.userId) return res.status(403).json({ errors: ["User doesn't own the requested course"] });
         await course.destroy();      
         return res.status(204).end();      
       } else {

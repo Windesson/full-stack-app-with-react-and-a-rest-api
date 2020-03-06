@@ -29,15 +29,17 @@ export default class CoursesDetail extends Component {
     }
 
     render() {
+        const authenticatedUser = this.props.context.authenticatedUser;
+        const course = this.state.course;
         return (
           <div className="bounds">
           <div className="grid-100"> 
             {(this.state.loading ) ? 
              <p className="loading"> Loading...</p> : 
-               ( this.props.context.authenticatedUser) ?
-              <CourseDetailContainer course={this.state.course} HandleDelete={this.HandleDelete}/>
+               ( authenticatedUser && authenticatedUser.id === course.userId) ?
+              <CourseDetailContainer course={course} HandleDelete={this.HandleDelete} errors={this.state.errors}/>
               :
-              <CourseDetailContainer course={this.state.course}/>
+              <CourseDetailContainer course={course} errors={this.state.errors}/>
              }
           </div>
           </div>
@@ -50,11 +52,14 @@ export default class CoursesDetail extends Component {
         const {encodedCredentials} = context.authenticatedUser;
 
         context.data.deleteCourse(id, encodedCredentials)
-        .then( errors => {
-          if (errors === null) {
+        .then( result => {
+          if (result.status === 204) {
+            console.log(`SUCCESS! '${title}' is now deleted!`);
             this.props.history.push('/');
           } else {
-            console.log(`SUCCESS! '${title}' is now deleted!`);
+            this.setState(() => {
+                return { errors: result.errors };
+           });
          }
         })
         .catch( err => {
@@ -64,10 +69,11 @@ export default class CoursesDetail extends Component {
     }
 }
 
-const CourseDetailContainer = ({course, HandleDelete}) => {
+const CourseDetailContainer = ({course, HandleDelete, errors}) => {
     if(course){
         return (
            <div>
+            <ErrorsDisplay errors={errors} />
              <div className="actions--bar">
               <div className="bounds">
                <div className="grid-100">
@@ -101,7 +107,14 @@ const CourseDetailContainer = ({course, HandleDelete}) => {
                         </li>
                         <li className="course--stats--list--item">
                             <h4>Materials Needed</h4>
-                            <p>{course.materialsNeeded}</p>
+                            <ul>
+                             { (course.materialsNeeded) ?
+                                (course.materialsNeeded.split("*").map((material, i) => {
+                                    if(material.trim() !== '') return <li key={i}>{material}</li>
+                                  }))
+                                : ''
+                             }
+                             </ul>
                         </li>
                     </ul>
                 </div>
@@ -113,3 +126,23 @@ const CourseDetailContainer = ({course, HandleDelete}) => {
         return (<h3>Course Not Found</h3>);
     }
 }
+
+function ErrorsDisplay({ errors }) {
+    let errorsDisplay = null;
+  
+    if (errors.length) {
+      errorsDisplay = (
+        <div>
+          <h2 className="validation--errors--label">Validation errors</h2>
+          <div className="validation-errors">
+            <ul>
+              {errors.map((error, i) => <li key={i}>{error}</li>)}
+            </ul>
+          </div>
+        </div>
+      );
+    }
+  
+    return errorsDisplay;
+  }
+  
