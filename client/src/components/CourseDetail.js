@@ -96,7 +96,7 @@ const CourseDetailContainer = ({course, HandleDelete, errors}) => {
                         <p>By {course.User.firstName} {course.User.lastName}</p>
                     </div>
                     <div className="course--description">
-                        <p>{course.description}</p>
+                        <p><ReactMarkdown source={course.description} /></p>
                     </div>
                 </div>
                 <div className="grid-25 grid-right">
