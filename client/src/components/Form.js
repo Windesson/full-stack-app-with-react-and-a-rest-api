@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Generic form to handle input elements and handle 
+ * common task such as cancel, error displaying and submit
+ */
 export default (props) => {
   const {
     cancel,

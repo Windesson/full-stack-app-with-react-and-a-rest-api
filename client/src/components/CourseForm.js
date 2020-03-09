@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Component form to handle update and creating courses.
+ */
 export default (props) => {
     const {
         onChange,

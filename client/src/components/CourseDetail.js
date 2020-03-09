@@ -2,6 +2,15 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
+/**
+ * This component provides the "Course Detail" screen by retrieving the 
+ * detail for a course from the REST API's /api/courses/:id route and 
+ * rendering the course. The component also renders a "Delete Course" 
+ * button that when clicked should send a DELETE request to the 
+ * REST API's /api/courses/:id route in order to delete a course. 
+ * This component also renders an "Update Course" button for 
+ * navigating to the "Update Course" screen.
+ */
 export default class CoursesDetail extends Component {
     
     state = {
@@ -29,6 +38,11 @@ export default class CoursesDetail extends Component {
         }); 
     }
 
+    /**
+     * rendering logic so that the "Update Course" and "Delete Course" buttons only display if
+     * There's an authenticated user. 
+     *  And the authenticated user's ID matches that of the user who owns the course.
+     */
     render() {
         const authenticatedUser = this.props.context.authenticatedUser;
         const course = this.state.course;
@@ -96,24 +110,26 @@ const CourseDetailContainer = ({course, HandleDelete, errors}) => {
                         <p>By {course.User.firstName} {course.User.lastName}</p>
                     </div>
                     <div className="course--description">
-                        <p><ReactMarkdown source={course.description} /></p>
+                        <ReactMarkdown source={course.description} />
                     </div>
                 </div>
                 <div className="grid-25 grid-right">
                 <div className="course--stats">
                     <ul className="course--stats--list">
                         <li className="course--stats--list--item">
-                            <h4>Estimated Time</h4>                            
-                            <h3><ReactMarkdown source={course.estimatedTime} /></h3>
+                            <h4>Estimated Time</h4>    
+                            { (course.estimatedTime)?
+                               <ReactMarkdown source={'### '+course.estimatedTime} />
+                               : ''
+                            }                        
                         </li>
                         <li className="course--stats--list--item">
                             <h4>Materials Needed</h4>
-                            <ul>
-                             { (course.materialsNeeded) ?
-                                (course.materialsNeeded.split("*").filter(filterMarkDown).map((material, i) => <li key={i}><ReactMarkdown source={material} /></li>))
-                                :''
-                             }
-                             </ul>
+                            { (course.materialsNeeded)? 
+                              <ReactMarkdown source={course.materialsNeeded}/> 
+                              : ''
+                            }
+                             
                         </li>
                     </ul>
                 </div>
@@ -124,10 +140,6 @@ const CourseDetailContainer = ({course, HandleDelete, errors}) => {
     } else {
         return (<h3>Course Not Found</h3>);
     }
-}
-
-function filterMarkDown(material) {
-    return (material.trim() !== '')
 }
 
 function ErrorsDisplay({ errors }) {

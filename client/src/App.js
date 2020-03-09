@@ -5,6 +5,7 @@ import {
   Switch
 } from 'react-router-dom';
 
+// import components 
 import PrivateRoute from './components/PrivateRoute';
 import Courses from './components/Courses';
 import Header from './components/Header';
@@ -16,8 +17,11 @@ import CourseDetail from './components/CourseDetail';
 import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
 import Error from './components/Error'
+
+// adding Cosumer context to access authenticated user info
 import withContext from './Context';
 
+// assign context to consumer 
 const HeaderWithContext = withContext(Header);
 const CoursesWithContext = withContext(Courses);
 const UserSignUpWithContext = withContext(UserSignUp);
@@ -27,7 +31,7 @@ const CourseDetailWithContext = withContext(CourseDetail);
 const CreateCourseWithContext = withContext(CreateCourse);
 const UpdateCourseWithContext = withContext(UpdateCourse);
 
-
+// route routes
 export default () => (
   <Router>
     <div>
