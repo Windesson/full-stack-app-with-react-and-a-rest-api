@@ -74,7 +74,6 @@ export default class CreateCourse extends Component {
     context.data.createCourse(course,encodedCredentials)
     .then( result => {
       if (result.status === 201 ) {
-        console.log(result)
         this.props.history.push(`/`);
       } else {
         this.setState(() => {

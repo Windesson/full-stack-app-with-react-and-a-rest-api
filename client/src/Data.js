@@ -54,12 +54,13 @@ export default class Data {
     async getCourse(id) {
       const response = await this.api(`/courses/${id}`);
       if (response.status === 200) {
-        return response.json().then(data => data);
+        return response.json().then(course => { return {status: response.status, data: course}});
       }
       else if (response.status === 400) {
-        return response.json().then(data => {
-          return data.errors;
-        });
+        return response.json().then(data => { return {status: response.status, errors: data.errors}});
+      }
+      else if (response.status === 404) {
+        return response.json().then(data => { return {status: response.status, message: data.message}});
       }
       else {
         throw new Error();

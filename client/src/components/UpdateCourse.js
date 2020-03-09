@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Form from './Form';
 import CourseForm from './CourseForm';
+import Forbidden from './Forbidden';
 
 /**
  * his component provides the "Update Course" screen by rendering a form that 
@@ -15,6 +16,7 @@ export default class UpdateCourse extends Component {
     description: '',
     estimatedTime: '',
     materialsNeeded: '',
+    userId: '',
     loading: true,
     errors: [],
   }
@@ -24,18 +26,21 @@ export default class UpdateCourse extends Component {
   }
 
   search = () => {
-        const { context } = this.props;
-        this.setState( { loading: true }) 
-        context.data.getCourse(this.props.match.params.id)
-        .then( course  => {
-        this.setState( { ...course }) 
-        })
-        .catch( () => {
-        this.props.history.push('/NotFound')
-        })
-        .finally( () => {
+      const { context } = this.props;
+      this.setState( { loading: true }) 
+      context.data.getCourse(this.props.match.params.id)
+      .then( result  => {
+        if(result.status === 200)
+          this.setState( { ...result.data }) 
+        else
+          this.props.history.push('/NotFound')
+      })
+      .catch( () => {
+        this.props.history.push('/error')
+      })
+      .finally( () => {
         this.setState( { loading: false})
-        }); 
+      }); 
   }
 
   render() {
@@ -43,6 +48,12 @@ export default class UpdateCourse extends Component {
     if(this.state.loading){
         return (<div>Loading...</div>);
     };
+
+    const { context } = this.props;
+    if(this.state.userId !== context.authenticatedUser.id){
+      return <Forbidden />
+    }
+       
 
     const title = this.state.title || '';
     const description = this.state.description || '';
@@ -53,8 +64,7 @@ export default class UpdateCourse extends Component {
         errors
     } = this.state;
 
-    const { context } = this.props;
-    const {firstName, lastName} = context.authenticatedUser;
+    const {firstName, lastName} = this.props.context.authenticatedUser;
     const authorName = `${firstName} ${lastName}`
     const onChange = this.change;
 

@@ -31,6 +31,7 @@ const CourseDetailWithContext = withContext(CourseDetail);
 const CreateCourseWithContext = withContext(CreateCourse);
 const UpdateCourseWithContext = withContext(UpdateCourse);
 
+
 // route routes
 export default () => (
   <Router>

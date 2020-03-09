@@ -23,15 +23,19 @@ export default class CoursesDetail extends Component {
         this.search();
     }
 
+
     search = () => {
         const { context } = this.props;
         this.setState( { loading: true }) 
         context.data.getCourse(this.props.match.params.id)
-        .then( course  => {
-          this.setState( { course }) 
+        .then( result  => {
+          if(result.status === 200)
+             this.setState( { course: result.data }) 
+          else
+             this.props.history.push('/NotFound')
         })
         .catch( () => {
-          this.props.history.push('/NotFound')
+          this.props.history.push('/error')
         })
         .finally( () => {
           this.setState( { loading: false})
