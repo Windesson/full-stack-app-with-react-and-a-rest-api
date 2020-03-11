@@ -16,7 +16,8 @@ import UserSignOut from './components/UserSignOut';
 import CourseDetail from './components/CourseDetail';
 import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
-import Error from './components/Error'
+import ErrorRoute from './components/Error';
+import Forbidden from './components/Forbidden';
 
 // adding Cosumer context to access authenticated user info
 import withContext from './Context';
@@ -46,7 +47,9 @@ export default () => (
         <Route exact path="/signin" component={UserSignInWithContext} />
         <Route exact path="/signup" component={UserSignUpWithContext} />
         <Route exact path="/signout" component={UserSignOutWithContext} />
-        <Route exact path="/error" component={Error} />
+        <Route exact path="/error" component={ErrorRoute} />
+        <Route exact path="/notfound"component={NotFound} />
+        <Route exact path="/forbidden"component={Forbidden} />
         <Route component={NotFound} />
       </Switch>
     </div>
